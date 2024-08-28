@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group = 'qa.nirmal'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+def aspectJVersion = '1.9.22'
+
+configurations {
+    agent {
+        canBeResolved = true
+        canBeConsumed = true
+    }
+}
+
+dependencies {
+    agent "org.aspectj:aspectjweaver:$aspectJVersion"
+    testImplementation platform('org.junit:junit-bom:5.11.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.23.1'
+}
+
+test {
+    ignoreFailures = true
+    useJUnitPlatform()
+    jvmArgs = ["-javaagent:${configurations.agent.singleFile}"]
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
