@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -22,6 +23,7 @@ public class FirstTest {
     }
 
     @Test
+    @Tag("Smoke")
     public void firstTest() {
 
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000000));
@@ -53,7 +55,7 @@ public class FirstTest {
     }
 
     @AfterEach
-    public void teardown() {
+    public void tearDown() {
         driver.quit();
     }
 }

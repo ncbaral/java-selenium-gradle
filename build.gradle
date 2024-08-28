@@ -9,6 +9,7 @@ repositories {
     mavenCentral()
 }
 
+def allureVersion = "2.25.0"
 def aspectJVersion = '1.9.22'
 
 configurations {
@@ -20,6 +21,10 @@ configurations {
 
 dependencies {
     agent "org.aspectj:aspectjweaver:$aspectJVersion"
+
+    testImplementation platform("io.qameta.allure:allure-bom:$allureVersion")
+    testImplementation "io.qameta.allure:allure-junit5"
+
     testImplementation platform('org.junit:junit-bom:5.11.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -30,7 +35,23 @@ dependencies {
 test {
     ignoreFailures = true
     useJUnitPlatform()
+
+    useJUnitPlatform{
+        includeTags 'smoke', 'qa'
+        excludeTags 'stage'
+    }
+
     jvmArgs = ["-javaagent:${configurations.agent.singleFile}"]
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+tasks.register('stageTest', Test) {
+    useJUnitPlatform {
+        includeTags 'stage'
+    }
+
     testLogging {
         events "passed", "skipped", "failed"
     }
